@@ -18,33 +18,13 @@ class SistemPendidikan {
     public boolean tambahJadwalKuliah(MataKuliah mataKuliah, String hari, String jam) {
         // Mengubah hari menjadi huruf kecil sebelum menambahkan jadwal
         String hariLower = hari.toLowerCase();
+        String jamSelesai = hitungJamSelesai(jam); // Hitung waktu selesai berdasarkan jam mulai
 
-        JadwalKuliah jadwalBaru = new JadwalKuliah(mataKuliah, hariLower, jam);
+        JadwalKuliah jadwalBaru = new JadwalKuliah(mataKuliah, hariLower, jam, jamSelesai);
 
-        while (jadwalBentrok(jadwalBaru)) {
+        if (jadwalBentrok(jadwalBaru)) {
             System.out.println("Jadwal bentrok dengan mata kuliah lain.");
-
-            // Tanyakan apakah pengguna ingin mencoba jadwal lain
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Apakah Anda ingin mencoba jadwal lain? (y/n): ");
-            String jawaban = scanner.nextLine().toLowerCase();
-
-            if (jawaban.equals("y")) {
-                // Meminta input jadwal baru
-                System.out.print("Masukkan hari kuliah (Senin, Selasa, Rabu, Kamis, Jumat): ");
-                hari = scanner.nextLine();
-                System.out.print("Masukkan jam kuliah (format 00:00 - 00:00): ");
-                jam = scanner.nextLine();
-
-                // Mengubah hari menjadi huruf kecil
-                hariLower = hari.toLowerCase();
-
-                // Membuat objek jadwal baru dengan input yang baru
-                jadwalBaru = new JadwalKuliah(mataKuliah, hariLower, jam);
-            } else {
-                // Jika pengguna tidak ingin mencoba jadwal lain
-                return false;
-            }
+            return false; // Mengembalikan false jika terdapat tabrakan jadwal
         }
 
         // Tambahkan jadwal baru jika tidak ada tabrakan
@@ -63,8 +43,14 @@ class SistemPendidikan {
         return false;
     }
 
-    public int getTotalMahasiswa() {
-        return totalMahasiswa;
+    private String hitungJamSelesai(String jamMulai) {
+        // Logika sederhana untuk menghitung waktu selesai berdasarkan jam mulai
+        // Misalnya, kita anggap setiap kuliah berdurasi satu jam
+        int jam = Integer.parseInt(jamMulai.substring(0, 2));
+        int menit = Integer.parseInt(jamMulai.substring(3));
+        
+        int jamSelesai = jam + 1;
+        return String.format("%02d:%02d", jamSelesai, menit);
     }
 
     public void tampilkanJadwalKuliah() {
