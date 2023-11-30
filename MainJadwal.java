@@ -1,5 +1,4 @@
 import java.util.Scanner;
-
 public class MainJadwal {
     public static void main(String[] args) {
         SistemPendidikan sistemPendidikan = new SistemPendidikan();
@@ -7,37 +6,51 @@ public class MainJadwal {
 
         try (Scanner scanner = new Scanner(System.in)) {
             for (int i = 0; i < 3; i++) {
-                System.out.print("Masukkan nama mata kuliah ke-" + (i + 1) + ": ");
-                String namaMataKuliah = scanner.nextLine();
+                boolean jadwalBerhasilDitambahkan = false;
 
-                System.out.print("Masukkan hari kuliah (Senin, Selasa, Rabu, Kamis, Jumat): ");
-                String hari = scanner.nextLine();
+                while (!jadwalBerhasilDitambahkan) {
+                    System.out.print("Masukkan nama mata kuliah ke-" + (i + 1) + ": ");
+                    String namaMataKuliah = scanner.nextLine();
 
-                System.out.print("Masukkan jam kuliah (format 00:00 - 00:00): ");
-                String jam = scanner.nextLine();
+                    System.out.print("Masukkan hari kuliah (Senin, Selasa, Rabu, Kamis, Jumat): ");
+                    String hari = scanner.nextLine();
 
-                // Pilih jenis mata kuliah
-                System.out.println("Pilih jenis mata kuliah (1, 2, 3): ");
-                int jenisMataKuliah = scanner.nextInt();
-                scanner.nextLine(); // Membersihkan newline
+                    System.out.print("Masukkan jam kuliah (format 00:00 - 00:00): ");
+                    String jam = scanner.nextLine();
 
-                MataKuliah mataKuliah;
-                switch (jenisMataKuliah) {
-                    case 1:
-                        mataKuliah = new MataKuliah1(namaMataKuliah);
-                        break;
-                    case 2:
-                        mataKuliah = new MataKuliah2(namaMataKuliah);
-                        break;
-                    case 3:
-                        mataKuliah = new MataKuliah3(namaMataKuliah);
-                        break;
-                    default:
-                        System.out.println("Jenis mata kuliah tidak valid.");
-                        return;
+                    // Pilih jenis mata kuliah
+                    System.out.println("Pilih jenis mata kuliah (1, 2, 3): ");
+                    int jenisMataKuliah = scanner.nextInt();
+                    scanner.nextLine(); // Membersihkan newline
+
+                    MataKuliah mataKuliah;
+                    switch (jenisMataKuliah) {
+                        case 1:
+                            mataKuliah = new MataKuliah1(namaMataKuliah);
+                            break;
+                        case 2:
+                            mataKuliah = new MataKuliah2(namaMataKuliah);
+                            break;
+                        case 3:
+                            mataKuliah = new MataKuliah3(namaMataKuliah);
+                            break;
+                        default:
+                            System.out.println("Jenis mata kuliah tidak valid.");
+                            return;
+                    }
+
+                    jadwalBerhasilDitambahkan = sistemPendidikan.tambahJadwalKuliah(mataKuliah, hari, jam);
+                    
+                    if (!jadwalBerhasilDitambahkan) {
+                        System.out.print("Jadwal tidak berhasil ditambahkan. Apakah ingin mencoba lagi? (y/n): ");
+                        String cobaLagi = scanner.nextLine();
+                        
+                        if (!cobaLagi.equalsIgnoreCase("y")) {
+                            break; // Keluar dari loop jika pengguna tidak ingin mencoba lagi
+                        }
+                    }
                 }
 
-                sistemPendidikan.tambahJadwalKuliah(mataKuliah, hari, jam);
                 System.out.println("----------------------------------------------");
             }
         }
